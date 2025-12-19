@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import NoteForm from "./components/NoteForm";
 import NoteList from "./components/NoteList";
 import Toast from "./components/Toast";
+import WhatsAppIcon from "./components/WhatsAppIcon";
 import { texts } from "./i18n";
 import "./App.css";
 
@@ -80,6 +81,7 @@ export default function App() {
         <h2 className="bg-white text-blue-400 dark:bg-gray-900 dark:text-white font-semibold text-center">{t.completed}</h2>
         <NoteList notes={filtered.filter(n => n.done)} toggle={toggle} remove={remove} edit={edit}/>
       </main>
+      <WhatsAppIcon/>
       <Footer/>
     </div>
   );

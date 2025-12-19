@@ -4,7 +4,7 @@ export default function NoteItem({ note, toggle, remove, save }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [text, setText] = useState(note.text);
 
-	useEffectEvent(() => {
+	useEffect(() => {
 		setText(note.text);
 	}, [note.text]);
 

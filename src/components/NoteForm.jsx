@@ -1,4 +1,4 @@
-import { useEffectEvent, useState } from "react";
+import { useEffect, useState } from "react";
 const emojis = ["😀","📝","🔥","⭐","📚","💼","🏠","🚀","😄","😁","😆","😅"];
 
 export default function NoteForm({ addNote, t }) {
