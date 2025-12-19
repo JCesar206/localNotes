@@ -19,7 +19,7 @@ export default function NoteItem({ note, toggle, remove, save }) {
 			<input type="checkbox" checked={note.done} onChange={() => toggle(note.id)} className="mt-1"/>
 
 			<div className="flex-1">
-				{isEditing ? (<textarea rows="4" value={text} onChange={e => setText(e.target.value)} className="w-full p-2 rounded border bg-white text-blue-500 font-semibold dark:bg-gray-800 dark:text-white resize-none"/>) : (
+				{isEditing ? (<textarea rows="4" value={text} onChange={e => setText(e.target.value)} className="w-full p-2 rounded border-2 border-blue-400 bg-white text-blue-500 font-semibold dark:bg-gray-800 dark:text-white resize-none"/>) : (
 					<p className={`whitespace-pre-wrap ${note.done ? "line-through text-gray-400" : ""}`}>
 						{note.text}
 					</p>

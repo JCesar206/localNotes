@@ -26,7 +26,7 @@ export default function NoteForm({ addNote, t }) {
 				</button>
 				))}
 				
-				<select value={category} onChange={e => setCategory(e.target.value)} className="p-2 rounded border-2 border-blue-300 bg-white text-blue-500 dark:bg-gray-800 dark:text-white">
+				<select value={category} onChange={e => setCategory(e.target.value)} className="p-2 rounded border-2 border-blue-300 bg-white text-blue-500 font-semibold dark:bg-gray-800 dark:text-white">
 					<option>{t.general}</option>
 					<option>{t.work}</option>
 					<option>{t.personal}</option>
