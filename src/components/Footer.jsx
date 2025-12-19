@@ -12,7 +12,7 @@ export default function Footer() {
 				<a href="mailto:jcesary06@gmail.com" title="Gmail"><SiGmail className="text-white hover:text-orange-500" size={20}/></a>
 			</div>
 
-			<p className="text-sm text-center text-white font-semibold hover:text-orange-500">&copy; {new Date().getFullYear()} Notes App Local | Juls. 😁| All right reserved.
+			<p className="text-sm text-center text-white font-semibold hover:text-orange-500">&copy; {new Date().getFullYear()} Notes App Local | Juls. | All right reserved.
 			</p>
 		</footer>
 	);
