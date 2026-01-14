@@ -13,9 +13,9 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [lang, setLang] = useState("es");
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || "light");
+    localStorage.getItem("theme") || "light"
+  );
   const [toast, setToast] = useState(null);
-  const [query, setQuery] = useState("");
 
   const t = texts[lang];
 
@@ -24,65 +24,101 @@ export default function App() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const showToast = msg => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  };
-  
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("notes")) || [];
-    setNotes(saved);
+    const savedNotes = JSON.parse(localStorage.getItem("notes")) || [];
+    setNotes(savedNotes);
   }, []);
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
+  const showToast = message => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const addNote = ({ text, category, emoji }) => {
-    setNotes([...notes, {id: Date.now(), text, category, emoji, done: false}, ]);
+    setNotes(prev => [
+      ...prev,
+      { id: Date.now(), text, category, emoji, done: false }
+    ]);
     showToast(t.noteAdded || "Nota agregada");
   };
 
-  const toggle = id => setNotes(notes.map(n => n.id === id ? {...n, done: !n.done} : n));
+  const toggleNote = id =>
+    setNotes(prev =>
+      prev.map(n => (n.id === id ? { ...n, done: !n.done } : n))
+    );
 
-  const remove = id => setNotes(notes.filter(n => n.id !== id));
+  const removeNote = id =>
+    setNotes(prev => prev.filter(n => n.id !== id));
 
-  const edit = id => {
-    const text = prompt("Editar nota");
-    if (!text) return;
-    setNotes(notes.map(n => n.id === id ? {...n, text} : n));
+  const updateNote = (id, newText) => {
+    setNotes(prev =>
+      prev.map(n => (n.id === id ? { ...n, text: newText } : n))
+    );
+    showToast(t.noteUpdated || "Nota actualizada");
   };
 
-  const save = (id, newText) => {
-    setNotes(notes.map(n => n.id === id ? {...n, text: newText} : n));
-    showToast("Nota actualizada");
-  };
+  const filteredNotes = notes.filter(n =>
+    n.text.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const filtered = notes.filter(n => n.text.toLowerCase().includes(search.toLowerCase()));
+  const pendingNotes = filteredNotes.filter(n => !n.done);
+  const completedNotes = filteredNotes.filter(n => n.done);
 
   return (
-    <div className="min-h-screen pb-22 bg-white dark:bg-gray-900">
-      <Header lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} t={t}/>
+    <div className="min-h-screen bg-white dark:bg-gray-900 pb-1">
+      <Header
+        lang={lang}
+        setLang={setLang}
+        theme={theme}
+        setTheme={setTheme}
+        t={t}
+      />
 
-      <Toast message={toast}/>
-      <main className="p-4 space-y-4 max-w-xl mx-auto">
+      <Toast message={toast} />
 
+      <main className="mx-auto max-w-xl p-4 space-y-4">
+        {/* Search */}
         <div className="flex gap-2">
-          <input className="flex-1 p-2 border-2 border-blue-200 rounded bg-white text-blue-600 font-semibold dark:bg-gray-700 dark:text-white dark:border-gray-100" placeholder={t.search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === "Enter" && setSearch(query)}/>
-          <button onClick={() => setSearch(query)} className="px-4 bg-blue-200 hover:bg-blue-500 dark:bg-gray-300 dark:hover:bg-gray-500 rounded cursor-pointer">🔍</button>
+          <input
+            className="flex-1 rounded border-2 border-blue-200 p-2 font-semibold text-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            placeholder={t.search}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
         </div>
 
-        <NoteForm addNote={addNote} t={t}/>
-        
-        <h2 className="bg-white text-blue-400 dark:bg-gray-900 dark:text-white font-semibold text-center">{t.pending}</h2>
+        <NoteForm addNote={addNote} t={t} />
 
-        <NoteList notes={filtered.filter(n => !n.done)} toggle={toggle} remove={remove} save={save}/>
-      
-        <h2 className="bg-white text-blue-400 dark:bg-gray-900 dark:text-white font-semibold text-center">{t.completed}</h2>
-        <NoteList notes={filtered.filter(n => n.done)} toggle={toggle} remove={remove} edit={edit}/>
+        <section className="space-y-2">
+          <h2 className="text-center font-semibold text-blue-400 dark:text-white">
+            {t.pending}
+          </h2>
+          <NoteList
+            notes={pendingNotes}
+            toggle={toggleNote}
+            remove={removeNote}
+            save={updateNote}
+          />
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-center font-semibold text-blue-400 dark:text-white">
+            {t.completed}
+          </h2>
+          <NoteList
+            notes={completedNotes}
+            toggle={toggleNote}
+            remove={removeNote}
+          />
+        </section>
       </main>
-      <WhatsAppIcon/>
-      <Footer/>
+
+      <WhatsAppIcon />
+      <Footer />
     </div>
   );
 }
